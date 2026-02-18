@@ -1,9 +1,14 @@
 {
-  "name": "fmiview",
+  "name": "fmiviewer",
   "displayName": "FMI Viewer",
   "description": "Quick viewer for FMU files (FMI 2.0 & 3.0)",
   "version": "0.1.0",
-  "publisher": "fmiview",
+  "publisher": "halentin",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/halentin/FMI-Viewer.git"
+  },
   "engines": {
     "vscode": "^1.85.0"
   },
