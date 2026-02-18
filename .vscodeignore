@@ -3,6 +3,7 @@ src/**
 node_modules/**
 sample_fmus/**
 test/**
+images/**
 tsconfig.json
 *.map
 .gitignore

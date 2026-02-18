@@ -2,7 +2,7 @@
 
 A VS Code extension for quick inspection of FMU files (Functional Mock-up Interface 2.0 & 3.0).
 
-![FMI Viewer screenshot](images/screenshot.png)
+![FMI Viewer screenshot](https://raw.githubusercontent.com/halentin/FMI-Viewer/main/images/screenshot.png)
 
 ## Features
 
@@ -12,7 +12,7 @@ A VS Code extension for quick inspection of FMU files (Functional Mock-up Interf
 - **Platform detection** — shows which binaries are included (e.g. `x86_64-linux`, `aarch64-darwin`)
 - **Variable browser** — filterable, sortable table with virtual scrolling for large models (400k+ variables)
 
-  ![Variable browser](images/variable_browser.png)
+  ![Variable browser](https://raw.githubusercontent.com/halentin/FMI-Viewer/main/images/variable_browser.png)
 
   - Filter by name or value reference
   - Filter by causality (input, output, parameter, local, independent)
