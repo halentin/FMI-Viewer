@@ -16,6 +16,11 @@ A VS Code extension for quick inspection of FMU files (Functional Mock-up Interf
 - **Contents tree** — ASCII folder tree of the FMU archive contents
 - **Theme integration** — follows your VS Code color theme
 
+## Limitations and scope
+
+- Only displays data from the FMU archive structure and `modelDescription.xml` — runtime information (e.g. actual variable values) is not available
+- No simulation of FMUs; binaries inside the archive are never executed
+
 ## Developing
 
 ```sh
