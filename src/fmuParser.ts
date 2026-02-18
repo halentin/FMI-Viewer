@@ -24,17 +24,28 @@ export interface TypeDefinition {
 export interface UnitDefinition {
   name: string;
   baseUnit?: Record<string, string>;
-  displayUnits?: { name: string; factor?: string; offset?: string }[];
+  displayUnits?: {
+    name: string;
+    factor?: string;
+    offset?: string;
+    inverse?: string;
+  }[];
 }
 
 export interface FmuData {
   fmiVersion: string;
   modelName: string;
   description?: string;
+  author?: string;
+  version?: string;
+  copyright?: string;
+  license?: string;
   generationTool?: string;
   generationDateAndTime?: string;
   guid?: string;
+  variableNamingConvention?: string;
   numberOfEventIndicators?: number;
+  numberOfContinuousStates?: number;
 
   modelExchange?: Record<string, string>;
   coSimulation?: Record<string, string>;
@@ -165,6 +176,8 @@ function parseModelDescription(xml: string): FmuData {
   let inModelVariables = false;
   let inTypeDefinitions = false;
   let inUnitDefinitions = false;
+  let inModelStructure = false;
+  let inDerivatives = false;
 
   // FMI 2.0 state
   let currentScalarVariable: Variable | null = null;
@@ -184,9 +197,14 @@ function parseModelDescription(xml: string): FmuData {
       data.fmiVersion = attrs.fmiVersion || "";
       data.modelName = attrs.modelName || "";
       data.description = attrs.description;
+      data.author = attrs.author;
+      data.version = attrs.version;
+      data.copyright = attrs.copyright;
+      data.license = attrs.license;
       data.generationTool = attrs.generationTool;
       data.generationDateAndTime = attrs.generationDateAndTime;
       data.guid = attrs.guid || attrs.instantiationToken;
+      data.variableNamingConvention = attrs.variableNamingConvention;
       if (attrs.numberOfEventIndicators) {
         data.numberOfEventIndicators = parseInt(
           attrs.numberOfEventIndicators,
@@ -207,6 +225,33 @@ function parseModelDescription(xml: string): FmuData {
       inTypeDefinitions = true;
     } else if (tag === "UnitDefinitions") {
       inUnitDefinitions = true;
+    } else if (tag === "ModelStructure") {
+      inModelStructure = true;
+    } else if (tag === "Derivatives" && inModelStructure) {
+      // FMI 2.0: <ModelStructure><Derivatives><Unknown>...
+      inDerivatives = true;
+    }
+
+    // ModelStructure: count states and event indicators
+    if (inModelStructure) {
+      if (data.fmiVersion.startsWith("2")) {
+        // FMI 2.0: <Unknown> inside <Derivatives> = one continuous state each
+        if (inDerivatives && tag === "Unknown") {
+          data.numberOfContinuousStates =
+            (data.numberOfContinuousStates || 0) + 1;
+        }
+      } else {
+        // FMI 3.0: <ContinuousStateDerivative> = one state each
+        if (tag === "ContinuousStateDerivative") {
+          data.numberOfContinuousStates =
+            (data.numberOfContinuousStates || 0) + 1;
+        }
+        // FMI 3.0: <EventIndicator> = one event indicator each
+        if (tag === "EventIndicator") {
+          data.numberOfEventIndicators =
+            (data.numberOfEventIndicators || 0) + 1;
+        }
+      }
     }
 
     // Variables parsing
@@ -307,6 +352,7 @@ function parseModelDescription(xml: string): FmuData {
           name: attrs.name || "",
           factor: attrs.factor,
           offset: attrs.offset,
+          inverse: attrs.inverse,
         });
       }
     }
@@ -319,6 +365,10 @@ function parseModelDescription(xml: string): FmuData {
       inTypeDefinitions = false;
     } else if (tag === "UnitDefinitions") {
       inUnitDefinitions = false;
+    } else if (tag === "ModelStructure") {
+      inModelStructure = false;
+    } else if (tag === "Derivatives") {
+      inDerivatives = false;
     }
 
     // FMI 2.0: push variable on ScalarVariable close

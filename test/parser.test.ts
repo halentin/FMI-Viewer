@@ -94,6 +94,11 @@ describe("FMI 2.0 parsing", () => {
     assert.ok(data.defaultExperiment!.stopTime);
   });
 
+  it("parses number of event indicators from root attribute", () => {
+    // Feedthrough has numberOfEventIndicators="0" on root element
+    assert.equal(typeof data.numberOfEventIndicators, "number");
+  });
+
   it("includes zip entries", () => {
     assert.ok(data.zipEntries.length > 0);
     assert.ok(data.zipEntries.some((e) => e.startsWith("binaries/")));
@@ -188,6 +193,30 @@ describe("FMI 2.0 BouncingBall", () => {
   it("parses variables with declared types", () => {
     const withType = data.variables.filter((v) => v.declaredType);
     assert.ok(withType.length > 0);
+  });
+
+  it("has continuous states", () => {
+    assert.ok(data.numberOfContinuousStates! > 0, "BouncingBall has continuous states");
+  });
+
+  it("has event indicators", () => {
+    assert.ok(data.numberOfEventIndicators! > 0, "BouncingBall has event indicators");
+  });
+});
+
+describe("FMI 3.0 BouncingBall", () => {
+  let data: FmuData;
+
+  before(async () => {
+    data = await parseFmu(fmu("3.0", "BouncingBall"));
+  });
+
+  it("has continuous states from ContinuousStateDerivative elements", () => {
+    assert.ok(data.numberOfContinuousStates! > 0, "BouncingBall 3.0 has continuous states");
+  });
+
+  it("has event indicators from EventIndicator elements", () => {
+    assert.ok(data.numberOfEventIndicators! > 0, "BouncingBall 3.0 has event indicators");
   });
 });
 

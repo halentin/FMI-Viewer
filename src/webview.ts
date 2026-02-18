@@ -313,6 +313,16 @@ export function generateWebviewHtml(data: FmuData, nonce: string): string {
       ${formattedTime ? `<span>Generated: ${esc(formattedTime)}</span>` : ""}
       ${data.guid ? `<span>${data.fmiVersion === "3.0" ? "Token" : "GUID"}: <code>${esc(data.guid)}</code></span>` : ""}
     </div>
+    <div class="meta">
+      ${data.author ? `<span>Author: ${esc(data.author)}</span>` : ""}
+      ${data.version ? `<span>Version: ${esc(data.version)}</span>` : ""}
+      ${data.copyright ? `<span>${esc(data.copyright)}</span>` : ""}
+      ${data.license ? `<span>License: ${esc(data.license)}</span>` : ""}
+    </div>
+    ${data.numberOfContinuousStates !== undefined || data.numberOfEventIndicators !== undefined ? `<div class="meta">
+      ${data.numberOfContinuousStates !== undefined ? `<span>Continuous states: ${data.numberOfContinuousStates}</span>` : ""}
+      ${data.numberOfEventIndicators !== undefined ? `<span>Event indicators: ${data.numberOfEventIndicators}</span>` : ""}
+    </div>` : ""}
   </div>
 
   ${capabilitiesHtml ? `<div class="section"><h2 class="section-header" data-section="capabilities">Interface Types &amp; Capabilities</h2><div class="section-body" id="capabilities"><div class="capabilities">${capabilitiesHtml}</div></div></div>` : ""}
