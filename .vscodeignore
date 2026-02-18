@@ -2,6 +2,7 @@
 src/**
 node_modules/**
 sample_fmus/**
+test/**
 tsconfig.json
 *.map
 .gitignore
