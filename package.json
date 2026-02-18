@@ -1,0 +1,47 @@
+{
+  "name": "fmiview",
+  "displayName": "FMI Viewer",
+  "description": "Quick viewer for FMU files (FMI 2.0 & 3.0)",
+  "version": "0.1.0",
+  "publisher": "fmiview",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Visualization"
+  ],
+  "activationEvents": [],
+  "main": "./out/extension.js",
+  "contributes": {
+    "customEditors": [
+      {
+        "viewType": "fmiview.fmuViewer",
+        "displayName": "FMU Viewer",
+        "selector": [
+          {
+            "filenamePattern": "*.fmu"
+          }
+        ],
+        "priority": "default"
+      }
+    ]
+  },
+  "scripts": {
+    "build": "esbuild src/extension.ts --bundle --outfile=out/extension.js --external:vscode --format=cjs --platform=node --sourcemap",
+    "watch": "npm run build -- --watch",
+    "pretest": "node test/setup.js && esbuild test/parser.test.ts --bundle --outfile=out/test-parser.js --format=cjs --platform=node",
+    "test": "node --test out/test-parser.js",
+    "package": "vsce package"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/vscode": "^1.85.0",
+    "@types/yauzl": "^2.10.3",
+    "esbuild": "^0.24.0",
+    "typescript": "^5.5.0"
+  },
+  "dependencies": {
+    "sax": "^1.4.1",
+    "yauzl": "^3.2.0"
+  }
+}

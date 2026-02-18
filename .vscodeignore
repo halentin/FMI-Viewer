@@ -1,0 +1,7 @@
+.vscode/**
+src/**
+node_modules/**
+sample_fmus/**
+tsconfig.json
+*.map
+.gitignore
