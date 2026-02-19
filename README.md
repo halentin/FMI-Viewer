@@ -42,3 +42,6 @@ Tests download the [Reference FMUs](https://github.com/modelica/Reference-FMUs) 
 ```sh
 npm test
 ```
+
+## AI Disclosure
+Parts of this codebase were generated or co-authored with the assistance of AI tools (Claude Code).
